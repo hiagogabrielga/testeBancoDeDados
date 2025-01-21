@@ -31,7 +31,7 @@ app.get('/api/mostrarDados', (req, res) => {
   });
 });
 
-app.get('/api/enviarDados', (req, res) => {
+app.post('/api/enviarDados', (req, res) => {
   const tabela = req.query.tabela;
   const nome = req.query.nome;
 

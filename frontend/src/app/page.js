@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const nomeTabela = 'aro'
+const nomeTabela = 'cor'
 
 export default function teste() {
   const [data, setData] = useState([]);
