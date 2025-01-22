@@ -1,4 +1,6 @@
 'use client'
+import * as ReactDom from 'react-dom';
+var ReactDom = require('react-dom')
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 const nomeTabela = 'cor'

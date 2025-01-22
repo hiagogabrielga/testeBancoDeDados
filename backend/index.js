@@ -1,5 +1,6 @@
-import express, { query } from 'express'
+import express, { json, query } from 'express'
 import { conexao } from './db.js';
+import adicionarVeiculo from './rotes/adicionarCarro.js';
 const app = express();
 
 conexao.connect(err => {
@@ -18,7 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/mostrarDados', (req, res) => {
+app.get('/api/mostrarDadosTabelas', (req, res) => {
   const tabela = req.query.tabela;
   const query = 'SELECT * FROM ??';
   conexao.query(query, [tabela], (err, resultado) => {
@@ -54,52 +55,34 @@ app.post('/api/enviarDados', (req, res) => {
   });
 });
 
-app.get('/api/deletarDados', (req, res) => {
-  const tabela = req.query.tabela;
-  const valorid = req.query.id;
 
-  // Validação básica para evitar erros
-  if (!tabela || !valorid) {
-    return res.status(400).json({ error: "Por favor, forneça 'tabela' e 'id'' como parâmetros na URL." });
-  }
 
-  // Monta o comando SQL usando placeholders para evitar injeção de SQL
-  const insert = 'DELETE from ?? where ?? = ?';
-  const colunaId = `id_${tabela}`
-  // Usa conexão segura com os placeholders
-  conexao.query(insert, [tabela, colunaId, valorid], (err, resultado) => {
-    if (err) {
-      console.error("Erro ao inserir no banco de dados:", err);
-      return res.status(500).json({ error: "Erro ao inserir no banco de dados." });
-    }
-
-    res.status(200).json({ message: "Deletação realizada com sucesso!", resultado });
-  });
-});
-
-app.get('/api/atualizarDados', (req, res) => {
-  const tabela = req.query.tabela;
-  const valorid = req.query.id;
-  const valor = req.query.valor;
-
-  if (!tabela || !valorid || !valor) {
-    return res.status(400).json({ error: "Por favor, forneça 'tabela', 'id' e 'valor' como parâmetros na URL." });
-  }
-
-  const insert = 'UPDATE ?? set ?? = (?) where ?? = ?';
-  const coluna = `nome_${tabela}`
-  const colunaId = `id_${tabela}`
-  // Usa conexão segura com os placeholders
-  conexao.query(insert, [tabela, coluna, valor, colunaId, valorid], (err, resultado) => {
-    if (err) {
-      console.error("Erro ao inserir no banco de dados:", err);
-      return res.status(500).json({ error: "Erro ao inserir no banco de dados." });
-    }
-
-    res.status(200).json({ message: "Atualização realizada com sucesso!", resultado });
-  });
-});
-
+app.get('/api/adicionarVeiculo', (req, res) => {
+  const nomeAnuncio = req.query.nomeAnuncio;
+  const anoCarro = req.query.anoCarro;
+  const condicaoCarro = req.query.condicaoCarro;
+  const valorCarro = req.query.valorCarro;
+  const ipvaPago = req.query.ipvaPago;
+  const dataIpva = req.query.dataIpva;
+  const dataCompra = req.query.dataCompra;
+  const detalhesVeiculo = req.query.detalhesVeiculo;
+  const blindagem = req.query.blindagem;
+  const idCor = req.query.idCor;
+  const idAro = req.query.idAro;
+  const idCategoria = req.query.idCategoria;
+  const idMarca = req.query.idMarca;
+  const idModelo = req.query.idModelo;
+  const idCombustivel = req.query.idCombustivel;
+  const idCambio = req.query.idCambio;
+  const idConcessionaria = req.query.idConcessionaria;
+  const nomeImagens = req.query.nomeImagens;
+  var mensagem;
+  mensagem = adicionarVeiculo(nomeAnuncio, anoCarro, condicaoCarro, valorCarro, ipvaPago, dataIpva,
+    dataCompra, detalhesVeiculo, blindagem, idCor, idAro, idCategoria,
+    idMarca, idModelo, idCombustivel, idCambio, idConcessionaria, nomeImagens)
+  res.json(mensagem)
+})
 app.listen(8080, () => {
   console.log('Servidor backend rodando na porta 8080');
 });
+

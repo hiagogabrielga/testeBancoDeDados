@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`concessionaria` (
   `telefone_concessionaria` VARCHAR(45) NOT NULL,
   `imagem_concessionaria` VARCHAR(45) NOT NULL,
   `endereco_id_endereco` INT NOT NULL,
-  PRIMARY KEY (`id_concessionaria`, `endereco_id_endereco`),
+  PRIMARY KEY (`id_concessionaria`),
   INDEX `fk_concessionaria_endereco1_idx` (`endereco_id_endereco` ASC) VISIBLE,
   CONSTRAINT `fk_concessionaria_endereco1`
     FOREIGN KEY (`endereco_id_endereco`)
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`modelo` (
   `nome_modelo` VARCHAR(45) NOT NULL,
   `marca_id_marca` INT NOT NULL,
   `categoria_id_categoria` INT NOT NULL,
-  PRIMARY KEY (`id_modelo`, `marca_id_marca`, `categoria_id_categoria`),
+  PRIMARY KEY (`id_modelo`),
   INDEX `fk_modelo_marca1_idx` (`marca_id_marca` ASC) VISIBLE,
   INDEX `fk_modelo_categoria1_idx` (`categoria_id_categoria` ASC) VISIBLE,
   CONSTRAINT `fk_modelo_marca1`
@@ -137,6 +137,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Web-Cars`.`anuncioCarro` (
   `id_anuncioCarro` INT NOT NULL AUTO_INCREMENT,
+  `nome_anuncioCarro` VARCHAR(45) NOT NULL,
   `ano` INT NOT NULL,
   `condicao` VARCHAR(45) NOT NULL,
   `valor` DECIMAL(65,2) NOT NULL,
@@ -153,8 +154,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`anuncioCarro` (
   `combustivel_id_combustivel` INT NOT NULL,
   `cambio_id_cambio` INT NOT NULL,
   `concessionaria_id_concessionaria` INT NOT NULL,
-  `concessionaria_endereco_id_endereco` INT NOT NULL,
-  PRIMARY KEY (`id_anuncioCarro`, `cor_id_cor`, `aro_id_aro`, `categoria_id_categoria`, `marca_id_marca`, `modelo_id_modelo`, `combustivel_id_combustivel`, `cambio_id_cambio`, `concessionaria_id_concessionaria`, `concessionaria_endereco_id_endereco`),
+  PRIMARY KEY (`id_anuncioCarro`),
   INDEX `fk_anuncioCarro_cor1_idx` (`cor_id_cor` ASC) VISIBLE,
   INDEX `fk_anuncioCarro_aro1_idx` (`aro_id_aro` ASC) VISIBLE,
   INDEX `fk_anuncioCarro_categoria1_idx` (`categoria_id_categoria` ASC) VISIBLE,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`anuncioCarro` (
   INDEX `fk_anuncioCarro_modelo1_idx` (`modelo_id_modelo` ASC) VISIBLE,
   INDEX `fk_anuncioCarro_combustivel1_idx` (`combustivel_id_combustivel` ASC) VISIBLE,
   INDEX `fk_anuncioCarro_cambio1_idx` (`cambio_id_cambio` ASC) VISIBLE,
-  INDEX `fk_anuncioCarro_concessionaria1_idx` (`concessionaria_id_concessionaria` ASC, `concessionaria_endereco_id_endereco` ASC) VISIBLE,
+  INDEX `fk_anuncioCarro_concessionaria1_idx` (`concessionaria_id_concessionaria` ASC) VISIBLE,
   CONSTRAINT `fk_anuncioCarro_cor1`
     FOREIGN KEY (`cor_id_cor`)
     REFERENCES `Web-Cars`.`cor` (`id_cor`)
@@ -199,8 +199,8 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`anuncioCarro` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_anuncioCarro_concessionaria1`
-    FOREIGN KEY (`concessionaria_id_concessionaria` , `concessionaria_endereco_id_endereco`)
-    REFERENCES `Web-Cars`.`concessionaria` (`id_concessionaria` , `endereco_id_endereco`)
+    FOREIGN KEY (`concessionaria_id_concessionaria`)
+    REFERENCES `Web-Cars`.`concessionaria` (`id_concessionaria`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`filtroAlerta` (
   `modelo_marca_id_marca` INT NOT NULL,
   `cliente_id_cliente` INT NOT NULL,
   `combustivel_id_combustivel` INT NOT NULL,
-  PRIMARY KEY (`id_filtroAlerta`, `cor_id_cor`, `cambio_id_cambio`, `aro_id_aro`, `categoria_id_categoria`, `marca_id_marca`, `modelo_marca_id_marca`, `combustivel_id_combustivel`),
+  PRIMARY KEY (`id_filtroAlerta`),
   INDEX `fk_filtroAlerta_cor1_idx` (`cor_id_cor` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_cambio1_idx` (`cambio_id_cambio` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_aro1_idx` (`aro_id_aro` ASC) VISIBLE,
@@ -299,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`imagensCarro` (
   `id_imagensCarro` INT NOT NULL,
   `nome_imagensCarro` VARCHAR(45) NOT NULL,
   `anuncioCarro_id_anuncioCarro` INT NOT NULL,
-  PRIMARY KEY (`id_imagensCarro`, `anuncioCarro_id_anuncioCarro`),
+  PRIMARY KEY (`id_imagensCarro`),
   INDEX `fk_imagensCarro_anuncioCarro1_idx` (`anuncioCarro_id_anuncioCarro` ASC) VISIBLE,
   CONSTRAINT `fk_imagensCarro_anuncioCarro1`
     FOREIGN KEY (`anuncioCarro_id_anuncioCarro`)
