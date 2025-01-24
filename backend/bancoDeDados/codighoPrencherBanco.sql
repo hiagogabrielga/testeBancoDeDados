@@ -73,16 +73,16 @@ INSERT INTO `Web-Cars`.`cliente` (`nome_cliente`, `cpf_cliente`, `email_cliente`
 ('Cliente C', '222.222.222-22', 'clienteC@email.com', '(31) 6666-6666', NULL);
 
 -- Populating the filtroAlerta table
-INSERT INTO `Web-Cars`.`filtroAlerta` (`ano`, `condicao`, `ipva_pago`, `data_ipva`, `data_compra`, 
+INSERT INTO `Web-Cars`.`filtroAlerta` (`nome_filtroAlerta`, `ano`, `condicao`, `ipva_pago`, `data_ipva`, `data_compra`, 
 `valor_maximo`, `valor_minimo`,
 `cor_id_cor`, `cambio_id_cambio`, 
 `aro_id_aro`, 
 `categoria_id_categoria`,
 `marca_id_marca`,
-`modelo_marca_id_marca`,
 `cliente_id_cliente`,
-`combustivel_id_combustivel`) VALUES
-(2020, 'Novo', NULL, NULL, NULL,
+`combustivel_id_combustivel`,
+`modelo_id_modelo`) VALUES
+('Carro A', 2020, 'Novo', NULL, NULL, NULL,
 60000.00, NULL,
 1, 
 1,
@@ -92,7 +92,7 @@ INSERT INTO `Web-Cars`.`filtroAlerta` (`ano`, `condicao`, `ipva_pago`, `data_ipv
 1,
 1,
 1),
-(2019, NULL, NULL,NULL,NULL,
+('Carro B', 2019, NULL, NULL,NULL,NULL,
 50000.00,NULL,
 2,
 2,
@@ -102,7 +102,7 @@ INSERT INTO `Web-Cars`.`filtroAlerta` (`ano`, `condicao`, `ipva_pago`, `data_ipv
 2,
 2,
 2),
-(2018,'Usado','0','2023-03-01','2023-03-10',
+('Carro C', 2018,'Usado','0','2023-03-01','2023-03-10',
 40000.00,NULL,
 3,
 1,

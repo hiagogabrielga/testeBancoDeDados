@@ -237,18 +237,18 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`filtroAlerta` (
   `aro_id_aro` INT NOT NULL,
   `categoria_id_categoria` INT NOT NULL,
   `marca_id_marca` INT NOT NULL,
-  `modelo_marca_id_marca` INT NOT NULL,
-  `cliente_id_cliente` INT NOT NULL,
   `combustivel_id_combustivel` INT NOT NULL,
+  `cliente_id_cliente` INT NOT NULL,
+  `modelo_id_modelo` INT NOT NULL,
   PRIMARY KEY (`id_filtroAlerta`),
   INDEX `fk_filtroAlerta_cor1_idx` (`cor_id_cor` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_cambio1_idx` (`cambio_id_cambio` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_aro1_idx` (`aro_id_aro` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_categoria1_idx` (`categoria_id_categoria` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_marca1_idx` (`marca_id_marca` ASC) VISIBLE,
-  INDEX `fk_filtroAlerta_modelo1_idx` (`modelo_marca_id_marca` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_cliente1_idx` (`cliente_id_cliente` ASC) VISIBLE,
   INDEX `fk_filtroAlerta_combustivel1_idx` (`combustivel_id_combustivel` ASC) VISIBLE,
+  INDEX `fk_filtroAlerta_modelo1_idx` (`modelo_id_modelo` ASC) VISIBLE,
   CONSTRAINT `fk_filtroAlerta_cor1`
     FOREIGN KEY (`cor_id_cor`)
     REFERENCES `Web-Cars`.`cor` (`id_cor`)
@@ -274,11 +274,6 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`filtroAlerta` (
     REFERENCES `Web-Cars`.`marca` (`id_marca`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_filtroAlerta_modelo1`
-    FOREIGN KEY (`modelo_marca_id_marca`)
-    REFERENCES `Web-Cars`.`modelo` (`marca_id_marca`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_filtroAlerta_cliente1`
     FOREIGN KEY (`cliente_id_cliente`)
     REFERENCES `Web-Cars`.`cliente` (`id_cliente`)
@@ -288,6 +283,11 @@ CREATE TABLE IF NOT EXISTS `Web-Cars`.`filtroAlerta` (
     FOREIGN KEY (`combustivel_id_combustivel`)
     REFERENCES `Web-Cars`.`combustivel` (`id_combustivel`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_filtroAlerta_modelo1`
+    FOREIGN KEY (`modelo_id_modelo`)
+    REFERENCES `Web-Cars`.`modelo` (`id_modelo`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -296,7 +296,7 @@ ENGINE = InnoDB;
 -- Table `Web-Cars`.`imagensCarro`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Web-Cars`.`imagensCarro` (
-  `id_imagensCarro` INT NOT NULL,
+  `id_imagensCarro` INT NOT NULL AUTO_INCREMENT,
   `nome_imagensCarro` VARCHAR(45) NOT NULL,
   `anuncioCarro_id_anuncioCarro` INT NOT NULL,
   PRIMARY KEY (`id_imagensCarro`),

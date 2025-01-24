@@ -1,8 +1,8 @@
 import express, { json, query } from 'express'
 import { conexao } from './config.js';
-import router from './routes/dadosSimples.js'
-import routerEnviarCarro from './routes/adicionarAnuncio.js';
-import routerMostraCarro from './routes/apresentarAnuncios.js'
+import routerSimples from './routes/mostrarSimples.js'
+import routerAdicionar from './routes/adicionar.js';
+import routerMostrarDetalhes from './routes/mostrarDetalhes.js'
 
 
 const app = express();
@@ -24,11 +24,12 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/api', router);
+app.use('/api', routerSimples);
 
-app.use('/api/adicionarVeiculo', routerEnviarCarro)
+app.use('/api/adicionar', routerAdicionar)
 
-app.use('/api/mostrar', routerMostraCarro)
+app.use('/api/mostrar', routerMostrarDetalhes)
+
 
 app.listen(8080, () => {
   console.log('Servidor backend rodando na porta 8080');
