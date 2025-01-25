@@ -10,7 +10,8 @@ export default function Header() {
             <div className={style.logo}>
                 <Image src="/images/logo.png" alt="Logo" width={50}
                     height={50}
-                    loading="eager" />
+                    loading="eager"
+                    priority/>
             </div>
 
             <div className={style.menuIcon}> <i className="bi bi-list"></i> </div>

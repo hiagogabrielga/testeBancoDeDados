@@ -35,38 +35,93 @@ routerSimples.get('/cor/:id?', (req, res) => {
     }
 });
 
+// Função para tratar erros e enviar respostas
+const handleError = (res, err, message) => {
+    console.error(message, err);
+    res.status(500).json({ error: message });
+};
+
+// Função para validar se um ID é válido
+const isValidId = (id, res, errorMessage) => {
+    if (isNaN(id)) {
+        res.status(400).json({ error: errorMessage });
+        return false;
+    }
+    return true;
+};
+
+routerSimples.get('/modelo', (req, res) => {
+    const { categoria: idCategoria, idMarca } = req.query;
+
+    // Verifica se ambos os IDs foram passados
+    if (idCategoria && idMarca) {
+        if (!isValidId(idCategoria, res, 'ID inválido. Deve ser um número.') || !isValidId(idMarca, res, 'ID inválido. Deve ser um número.')) {
+            return;
+        }
+
+        const query = 'SELECT * FROM modelo WHERE categoria_id_categoria = ? AND marca_id_marca = ?';
+        conexao.query(query, [idCategoria, idMarca], (err, resultado) => {
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
+            if (resultado.length === 0) return res.status(404).json({ error: 'Registro não encontrado.' });
+            res.json(resultado);
+        });
+    }
+    // Verifica apenas o ID da categoria
+    else if (idCategoria) {
+        if (!isValidId(idCategoria, res, 'ID inválido. Deve ser um número.')) return;
+
+        const query = 'SELECT * FROM modelo WHERE categoria_id_categoria = ?';
+        conexao.query(query, [idCategoria], (err, resultado) => {
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
+            if (resultado.length === 0) return res.status(404).json({ error: 'Registro não encontrado.' });
+            res.json(resultado);
+        });
+    }
+    // Verifica apenas o ID da marca
+    else if (idMarca) {
+        if (!isValidId(idMarca, res, 'ID inválido. Deve ser um número.')) return;
+
+        const query = 'SELECT * FROM modelo WHERE marca_id_marca = ?';
+        conexao.query(query, [idMarca], (err, resultado) => {
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
+            if (resultado.length === 0) return res.status(404).json({ error: 'Registro não encontrado.' });
+            res.json(resultado);
+        });
+    }
+    // Caso nenhum ID seja fornecido, retorna todos os registros
+    else {
+        const query = 'SELECT * FROM modelo';
+        conexao.query(query, (err, resultado) => {
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
+            res.json(resultado);
+        });
+    }
+});
+
 routerSimples.get('/modelo/:id?', (req, res) => {
     const id = req.params.id;
+
+    // Caso o ID não seja fornecido, retorna todos os registros
     if (!id) {
         const query = 'SELECT * FROM modelo';
         conexao.query(query, (err, resultado) => {
-            if (err) {
-                console.error('Erro ao executar a query:', err);
-                res.status(500).json({ error: 'Erro ao buscar dados.' });
-                return;
-            }
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
             res.json(resultado);
         });
-    } else {
-        if (isNaN(id)) {
-            res.status(400).json({ error: 'ID inválido. Deve ser um número.' });
-            return;
-        }
+    }
+    // Se o ID for fornecido, verifica se é válido e busca o registro específico
+    else {
+        if (!isValidId(id, res, 'ID inválido. Deve ser um número.')) return;
+
         const query = 'SELECT * FROM modelo WHERE id_modelo = ?';
         conexao.query(query, [id], (err, resultado) => {
-            if (err) {
-                console.error('Erro ao executar a query:', err);
-                res.status(500).json({ error: 'Erro ao buscar dados.' });
-                return;
-            }
-            if (resultado.length === 0) {
-                res.status(404).json({ error: 'Registro não encontrado.' });
-                return;
-            }
+            if (err) return handleError(res, err, 'Erro ao buscar dados.');
+            if (resultado.length === 0) return res.status(404).json({ error: 'Registro não encontrado.' });
             res.json(resultado[0]);
         });
     }
 });
+
 
 routerSimples.get('/combustivel/:id?', (req, res) => {
     const id = req.params.id;

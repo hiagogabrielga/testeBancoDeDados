@@ -32,12 +32,10 @@ async function apresentarDadosCarroDetalhadamente(id) {
                 for (const item of resultado) {
                     try {
                         const resposta = await axios.get(`${rotaPradrao}imagens/${item[`id_anuncioCarro`]}`);
-                        resposta.data.forEach((imagem, index) => {
-                            item[`imagem${index}`] = imagem.nome_imagensCarro;
-                        });
+                        item.imagens =  resposta.data.map((imagem) => imagem.nome_imagensCarro);
                     } catch (error) {
                         console.error('Erro ao buscar dados da API externa:', error);
-                        item[`imagem0`] = null;
+                        item[`imagens`] = null;
                     }
                 }
 
@@ -78,12 +76,10 @@ async function apresentarDadosCarroDetalhadamente(id) {
                 for (const item of resultado) {
                     try {
                         const resposta = await axios.get(`${rotaPradrao}imagens/${item[`id_anuncioCarro`]}`);
-                        resposta.data.forEach((imagem, index) => {
-                            item[`imagem${index}`] = imagem.nome_imagensCarro;
-                        });
+                        item.imagens =  resposta.data.map((imagem) => imagem.nome_imagensCarro);
                     } catch (error) {
                         console.error('Erro ao buscar dados da API externa:', error);
-                        item[`imagem0`] = null;
+                        item[`imagens`] = null;
                     }
                 }
 
