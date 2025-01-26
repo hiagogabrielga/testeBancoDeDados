@@ -1,25 +1,34 @@
 'use client';
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dropdown from "./DropDown";
 import DropdownEspecial from "./DropDownEspecial";
 
 export default function AdicionarProduto() {
   const [selecionado, setSelecionado] = useState();
-  const [valorCor, setCor] = useState()
-  const [valorMarca, setValorMarca] = useState()
-  const [valorModelo, setValorModelo] = useState()
-  const [valorAro, setValorAro] = useState()
-  const [valorCondicao, setCondicao] = useState()
-  const [valorCategoria, setValorCategoria] = useState()
-  const [valorCombustivel, setValorCombustivel] = useState()
+  const [valorCor, setCor] = useState();
+  const [valorMarca, setValorMarca] = useState();
+  const [valorModelo, setValorModelo] = useState();
+  const [valorAro, setValorAro] = useState();
+  const [valorCondicao, setCondicao] = useState();
+  const [valorCategoria, setValorCategoria] = useState();
+  const [valorCombustivel, setValorCombustivel] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const selectedValues = {
+      marca: valorMarca,
+      aro: valorAro,
+      modelo: valorModelo,
+      combustivel: valorCombustivel,
+      condicao: valorCondicao,
+      categoria: valorCategoria,
+      cor: valorCor,
+    };
+
     try {
       console.log("Dados a serem enviados:", selectedValues);
-      // Enviar os dados para a API
-      // await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
+      await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
@@ -29,69 +38,60 @@ export default function AdicionarProduto() {
     setSelecionado(label);
     switch (label) {
       case "marca":
-        valorMarca = valor
+        setValorMarca(valor);
         break;
       case "aro":
-        valorAro = valor
+        setValorAro(valor);
         break;
       case "modelo":
-        valorModelo = valor
+        setValorModelo(valor);
         break;
       case "combustivel":
-        valorCombustivel = valor
+        setValorCombustivel(valor);
         break;
       case "condicao":
-        valorCondicao = valor
-        break;
-      case "marca":
-        valorMarca = valor
+        setCondicao(valor);
         break;
       case "categoria":
-        valorCategoria = valor
+        setValorCategoria(valor);
         break;
       case "cor":
-        valorCor = valor
+        setCor(valor);
         break;
       default:
-    
+        console.warn("Label não reconhecido:", label);
         break;
     }
   };
 
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <Dropdown
-          label='marca'
-          onValorSelecionado={handleValorSelecionado}
-        />
-        <p>Valor Selecionado: {selecionado}</p>
-        <Dropdown
-          label='categoria'
-        />
+        <Dropdown label="marca" onValorSelecionado={handleValorSelecionado} />
+        <p>Valor Selecionado: {valorMarca}</p>
+        <Dropdown label="categoria" onValorSelecionado={handleValorSelecionado} />
+        <p>Valor Selecionado: {valorCategoria}</p>
         <DropdownEspecial
-          label='modelo'
+          label="modelo"
           valorMarca={valorMarca}
           valorCategoria={valorCategoria}
+          onValorSelecionado={handleValorSelecionado}
         />
-        <Dropdown
-          label='aro'
-        />
-        <Dropdown
-          label='combustivel'
-        />
-
-        <Dropdown
-          label='cor'
-        />
+        <Dropdown label="aro" onValorSelecionado={handleValorSelecionado} />
+        <Dropdown label="combustivel" onValorSelecionado={handleValorSelecionado} />
+        <Dropdown label="cor" onValorSelecionado={handleValorSelecionado} />
         <div className="campodePrenchimento">
           <div className="select">
-            <select defaultValue="">
-              <option disabled={true} value="">Escolha</option>
-              <option value="novo" key="valorNovo">Novo</option>
-              <option value="semi-novo" key="valorSeminovo">Semi novo</option>
-              <option value="usado" key="valorUsado">Usado</option>
+            <select
+              value={valorCondicao || ""}
+              onChange={(e) => setCondicao(e.target.value)}
+            >
+              <option disabled value="">
+                Escolha
+              </option>
+              <option value="novo">Novo</option>
+              <option value="semi-novo">Semi novo</option>
+              <option value="usado">Usado</option>
             </select>
           </div>
         </div>
