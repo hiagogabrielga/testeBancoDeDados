@@ -225,6 +225,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Web-Cars`.`filtroAlerta` (
   `id_filtroAlerta` INT NOT NULL AUTO_INCREMENT,
+  `nome_filtroAlerta` VARCHAR(45),
   `ano` INT NULL,
   `condicao` VARCHAR(45) NULL,
   `ipva_pago` TINYINT NULL,

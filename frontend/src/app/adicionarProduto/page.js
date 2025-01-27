@@ -68,9 +68,9 @@ export default function AdicionarProduto() {
     <div>
       <form onSubmit={handleSubmit}>
         <Dropdown label="marca" onValorSelecionado={handleValorSelecionado} />
-        <p>Valor Selecionado: {valorMarca}</p>
+
         <Dropdown label="categoria" onValorSelecionado={handleValorSelecionado} />
-        <p>Valor Selecionado: {valorCategoria}</p>
+
         <DropdownEspecial
           label="modelo"
           valorMarca={valorMarca}
@@ -82,6 +82,9 @@ export default function AdicionarProduto() {
         <Dropdown label="cor" onValorSelecionado={handleValorSelecionado} />
         <div className="campodePrenchimento">
           <div className="select">
+            <label>
+              <p>Condição do veículo</p>
+            </label>
             <select
               value={valorCondicao || ""}
               onChange={(e) => setCondicao(e.target.value)}
@@ -95,7 +98,97 @@ export default function AdicionarProduto() {
             </select>
           </div>
         </div>
-
+        <div>
+          <label>
+            Ano
+            <div>
+              <input type="date"/>
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Data compra
+            <div>
+              <input type="date" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Ipva
+            <div>
+              <input type="checkbox" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Blidagem
+            <div>
+              <input type="checkbox" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Quilometragem
+            <div>
+              <input type="text" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Nome de exibição
+            <div>
+              <input type="text" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Imagens do produto
+            <div>
+              <input type="file" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Detalhes
+            <div>
+              <textarea cols="30" rows="10"></textarea>
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Valor do produto
+            <div>
+              <input type="text" />
+            </div>
+          </label>
+        </div>
+        <div>
+          <label>
+            Contatos para negociações
+            <div>
+              <div>
+                <label>
+                  Número
+                  <input type="checkbox" />
+                </label>
+              </div>
+              <div>
+                <label>
+                  E-mail
+                  <input type="checkbox" />
+                </label>
+              </div>
+            </div>
+          </label>
+        </div>
         <button type="submit">Enviar</button>
       </form>
     </div>

@@ -114,7 +114,7 @@ INSERT INTO `Web-Cars`.`filtroAlerta` (`nome_filtroAlerta`, `ano`, `condicao`, `
 3);
 
 -- Populating the imagensCarro table
-INSERT INTO `Web-Cars`.`imagensCarro` `nome_imagensCarro`,`anuncioCarro_id_anuncioCarro`) VALUES
+INSERT INTO `Web-Cars`.`imagensCarro` (`nome_imagensCarro`,`anuncioCarro_id_anuncioCarro`) VALUES
 ('imagemA.jpg','1'),
 ('imagemB.jpg','2'),
 ('imagemC.jpg','3');
