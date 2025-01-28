@@ -141,9 +141,8 @@ export default function AdicionarProduto() {
           <label>
             Ano
             <div>
-              <input type="date" onChange={(e) => setAno(e.target.value)} />
+              <input type="number" onChange={(e) => setAno(e.target.value)} />
             </div>
-            <p>{valorAno}</p>
           </label>
         </div>
         <div>
