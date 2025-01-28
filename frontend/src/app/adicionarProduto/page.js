@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import Dropdown from "./DropDown";
 import DropdownEspecial from "./DropDownEspecial";
+import Image from "next/image";
 
 export default function AdicionarProduto() {
   const [valorCor, setCor] = useState();
@@ -41,22 +42,21 @@ export default function AdicionarProduto() {
       cor: valorCor,
       ano: valorAno,
       valor: valorValor,
-      valorImagens: valorImagens,
-      valorBlindagem: valorBlindagem,
-      valorDataCompra: valorDataCompra,
-      valorNome: valorNome,
-      valorIpva: valorIpva,
-      valorDataIpva: valorDataIpva,
-      valorDetalhes: valorDetalhes,
-      valorContatoEmail: valorContatoEmail,
-      valorContatoNumero: valorContatoNumero,
-      valorQuilometragem: valorQuilometragem,
+      imagens: valorImagens,
+      blindagem: valorBlindagem,
+      dataCompra: valorDataCompra,
+      nome: valorNome,
+      ipva: valorIpva,
+      dataIpva: valorDataIpva,
+      detalhes: valorDetalhes,
+      contatoEmail: valorContatoEmail,
+      contatoNumero: valorContatoNumero,
+      quilometragem: valorQuilometragem,
     };
 
-
     try {
-      console.log("Dados a serem enviados:", selectedValues);
-      await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
+      console.log("Dados a serem enviados:", selectedValues.blindagem);
+      //await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
