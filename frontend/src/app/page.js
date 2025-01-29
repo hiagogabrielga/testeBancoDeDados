@@ -7,7 +7,7 @@ export default function teste() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/mostrarDados?tabela=${nomeTabela}`)
+    axios.get(`http://localhost:8080/api/${nomeTabela}`)
       .then(response => setData(response.data));
   }, []);
   return (

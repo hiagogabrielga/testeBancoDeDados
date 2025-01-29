@@ -8,10 +8,6 @@ export default function Header() {
     return (
         <header className={style.header}>
             <div className={style.logo}>
-                <Image src="/images/logo.png" alt="Logo" width={50}
-                    height={50}
-                    loading="eager"
-                    priority/>
             </div>
 
             <div className={style.menuIcon}> <i className="bi bi-list"></i> </div>
@@ -38,7 +34,7 @@ export default function Header() {
             </div>
 
             <div className={style.carrinho}>
-                <Image src="/images/iconeCarrinho.png" alt="" width={50} height={50} loading="eager" />
+                
             </div>
 
             <div className={style.perfil}>

@@ -1,9 +1,10 @@
 'use client';
 import axios from "axios";
 import React, { useState } from "react";
-import Dropdown from "./DropDown";
-import DropdownEspecial from "./DropDownEspecial";
-import Image from "next/image";
+import Dropdown from "./dropDown.js";
+import DropdownEspecial from "./dropDownEspecial.js";
+import controleDadosImagem from "./controleDeDadosImagem.js";
+import { formatarQuilometragem, validarAno, formatarValorMonetario, validarAnoCalendario } from "./controleDeDadosSimples.js";
 
 export default function AdicionarProduto() {
   const [valorCor, setCor] = useState();
@@ -24,11 +25,35 @@ export default function AdicionarProduto() {
   });
   const [valorDataIpva, setDataIpva] = useState();
   const [valorValor, setValor] = useState();
-  const [valorImagens, setImagens] = useState();
+  const [valorImagens, setImagens] = useState([]); // Alterado para array
   const [valorDetalhes, setDetalhes] = useState();
   const [valorQuilometragem, setQuilometragem] = useState();
+  const [errorMessage, setErrorMessage] = useState(''); // Adicionado para mensagem de erro
+  const [imagePreview, setImagePreview] = useState(null);
 
+  // Atualiza a pré-visualização das imagens sem modificar o estado diretamente
 
+  // Função para verificar se o número mínimo de imagens foi atendido
+  const validateImageCount = (images) => {
+    if (images.length < 5) {
+      setErrorMessage('Por favor, selecione pelo menos 5 imagens.');
+    } else {
+      setErrorMessage('');
+    }
+  };
+
+  // Evento ao selecionar as imagens
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +67,7 @@ export default function AdicionarProduto() {
       cor: valorCor,
       ano: valorAno,
       valor: valorValor,
-      imagens: valorImagens,
+      imagens: valorImagens ? controleDadosImagem(valorImagens) : [],
       blindagem: valorBlindagem,
       dataCompra: valorDataCompra,
       nome: valorNome,
@@ -55,12 +80,14 @@ export default function AdicionarProduto() {
     };
 
     try {
-      console.log("Dados a serem enviados:", selectedValues.blindagem);
-      //await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
+      console.log("Dados a serem enviados:", selectedValues);
+      // Descomente para enviar para a API:
+      // await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
   };
+
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setCheckboxValues((prevValues) => ({
@@ -69,6 +96,7 @@ export default function AdicionarProduto() {
     }));
   };
 
+  // Variáveis para converter checkbox em valores binários
   const valorIpva = checkboxValues.ipva ? '1' : '0';
   const valorBlindagem = checkboxValues.blindagem ? '1' : '0';
   const valorContatoEmail = checkboxValues.contatoEmail ? '1' : '0';
@@ -100,14 +128,11 @@ export default function AdicionarProduto() {
     }
   };
 
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <Dropdown label="marca" onValorSelecionado={handleValorSelecionado} />
-
         <Dropdown label="categoria" onValorSelecionado={handleValorSelecionado} />
-
         <DropdownEspecial
           label="modelo"
           valorMarca={valorMarca}
@@ -115,15 +140,12 @@ export default function AdicionarProduto() {
           onValorSelecionado={handleValorSelecionado}
         />
         <Dropdown label="aro" onValorSelecionado={handleValorSelecionado} />
-
         <Dropdown label="combustivel" onValorSelecionado={handleValorSelecionado} />
-
         <Dropdown label="cor" onValorSelecionado={handleValorSelecionado} />
+
         <div className="campodePrenchimento">
-          <div className="select">
-            <label>
-              <p>Condição do veículo</p>
-            </label>
+          <label>
+            <p>Condição do veículo</p>
             <select
               value={valorCondicao || ""}
               onChange={(e) => setCondicao(e.target.value)}
@@ -135,124 +157,165 @@ export default function AdicionarProduto() {
               <option value="semi-novo">Semi novo</option>
               <option value="usado">Usado</option>
             </select>
-          </div>
+          </label>
         </div>
+
         <div>
           <label>
             Ano
-            <div>
-              <input type="number" onChange={(e) => setAno(e.target.value)} />
-            </div>
+            <input
+              type="number"
+              name="ano"
+              onBlur={(e) => validarAno(e.target)}
+              onChange={(e) => setAno(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Data compra
-            <div>
-              <input type="date" onChange={(e) => setAno(e.target.value)} />
-            </div>
+            <input
+              type="date"
+              name="dataCompra"
+              onChange={(e) => setDataCompra(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
-            Ipva
-            <div>
-              <input
-                type="checkbox"
-                //onChange={(e) => setIpva(e.target.value)}
-                name="ipva"
-                checked={checkboxValues.ipva}
-                onChange={handleCheckboxChange}
-              />
-            </div>
+            IPVA
+            <input
+              type="checkbox"
+              name="ipva"
+              checked={checkboxValues.ipva}
+              onChange={handleCheckboxChange}
+            />
           </label>
         </div>
+
         <div>
           <label>
-            Data Ipva
-            <div>
-              <input type="date" onChange={(e) => setDataIpva(e.target.value)} />
-            </div>
+            Data IPVA
+            <input
+              type="date"
+              name="dataIpva"
+              onBlur={(e) => validarAnoCalendario(e.target)}
+              onChange={(e) => setDataIpva(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
-            Blidagem
-            <div>
-              <input
-                type="checkbox"
-                name="blindagem"
-                checked={checkboxValues.blindagem}
-                onChange={handleCheckboxChange} />
-            </div>
+            Blindagem
+            <input
+              type="checkbox"
+              name="blindagem"
+              checked={checkboxValues.blindagem}
+              onChange={handleCheckboxChange}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Quilometragem
-            <div>
-              <input type="text" onChange={(e) => setQuilometragem(e.target.value)} />
-            </div>
+            <input
+              type="text"
+              name="quilometragem"
+              onBlur={(e) => formatarQuilometragem(e.target)}
+              onChange={(e) => setQuilometragem(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Nome de exibição
-            <div>
-              <input type="text" onChange={(e) => setNome(e.target.value)} />
-            </div>
+            <input
+              type="text"
+              name="nome"
+              onChange={(e) => setNome(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Imagens do produto
-            <div>
-              <input type="file" onChange={(e) => setImagens(e.target.value)} />
-            </div>
+            <input
+              id="file-upload"
+              type="file"
+              name="imagens"
+              onChange={(e) => { setImagens(Array.from(e.target.files)), handleFileChange(e) }}
+              multiple
+            />
           </label>
+          <div className="image-preview-area">
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Pré-visualização"
+                style={{ maxWidth: '300px', display: 'block', marginTop: '10px' }}
+              />
+            )}
+          </div>
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
+
         <div>
           <label>
             Detalhes
-            <div>
-              <textarea cols="30" rows="10" onChange={(e) => setDetalhes(e.target.value)} ></textarea>
-            </div>
+            <textarea
+              name="detalhes"
+              cols="30"
+              rows="10"
+              onChange={(e) => setDetalhes(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Valor do produto
-            <div>
-              <input type="text" onChange={(e) => setValor(e.target.value)} />
-            </div>
+            <input
+              type="text"
+              name="valor"
+              onBlur={(e) => formatarValorMonetario(e.target)}
+              onChange={(e) => setValor(e.target.value)}
+            />
           </label>
         </div>
+
         <div>
           <label>
             Contatos para negociações
             <div>
-              <div>
-                <label>
-                  Número
-                  <input type="checkbox"
+              <label>
+                Número
+                <input
+                  type="checkbox"
                   name="contatoNumero"
                   checked={checkboxValues.contatoNumero}
                   onChange={handleCheckboxChange}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  E-mail
-                  <input type="checkbox"
+                />
+              </label>
+
+              <label>
+                E-mail
+                <input
+                  type="checkbox"
                   name="contatoEmail"
                   checked={checkboxValues.contatoEmail}
-                  onChange={handleCheckboxChange} />
-                </label>
-              </div>
+                  onChange={handleCheckboxChange}
+                />
+              </label>
             </div>
           </label>
         </div>
+
         <button type="submit">Enviar</button>
       </form>
     </div>

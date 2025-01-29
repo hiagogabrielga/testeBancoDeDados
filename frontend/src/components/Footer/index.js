@@ -9,13 +9,7 @@ export default function Footer() {
         <footer className={style.footer}>
             <div className={style.footerContainer}>
                 <div className={style.logo}>
-                <Image
-                        src="/images/logo.png"
-                        alt="Logo"
-                        width={50}
-                        height={50}
-                        loading="eager"
-                    />
+
                 </div>
                 <div className={style.footerLinks}>
                     <div className={style.column}>

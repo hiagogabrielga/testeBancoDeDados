@@ -1,8 +1,9 @@
-import express, { json, query } from 'express'
+import express, { json, query } from 'express';
 import { conexao } from './config.js';
-import routerSimples from './routes/mostrarSimples.js'
+import routerSimples from './routes/mostrarSimples.js';
 import routerAdicionar from './routes/adicionar.js';
-import routerMostrarDetalhes from './routes/mostrarDetalhes.js'
+import routerMostrarDetalhes from './routes/mostrarDetalhes.js';
+import routerUploadImagem from './routes/adicionarImagens.js';
 
 
 const app = express();
@@ -29,6 +30,8 @@ app.use('/api', routerSimples);
 app.use('/api/adicionar', routerAdicionar)
 
 app.use('/api/mostrar', routerMostrarDetalhes)
+
+app.use('/api/uploadImagem', routerUploadImagem)
 
 
 app.listen(8080, () => {
