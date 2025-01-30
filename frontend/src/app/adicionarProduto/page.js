@@ -4,9 +4,12 @@ import React, { useState } from "react";
 import Dropdown from "./dropDown.js";
 import DropdownEspecial from "./dropDownEspecial.js";
 import controleDadosImagem from "./controleDeDadosImagem.js";
+import DropdownSimulado from "./dropDownCodicao.js";
+import styles from "./page.module.css"
 import { formatarQuilometragem, validarAno, formatarValorMonetario, validarAnoCalendario } from "./controleDeDadosSimples.js";
 
 export default function AdicionarProduto() {
+  const [dropdownAberto, setDropdownAberto] = useState("");
   const [valorCor, setCor] = useState();
   const [valorMarca, setMarca] = useState();
   const [valorModelo, setModelo] = useState();
@@ -29,29 +32,29 @@ export default function AdicionarProduto() {
   const [valorDetalhes, setDetalhes] = useState();
   const [valorQuilometragem, setQuilometragem] = useState();
   const [errorMessage, setErrorMessage] = useState(''); // Adicionado para mensagem de erro
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  // Atualiza a pré-visualização das imagens sem modificar o estado diretamente
-
-  // Função para verificar se o número mínimo de imagens foi atendido
-  const validateImageCount = (images) => {
-    if (images.length < 5) {
-      setErrorMessage('Por favor, selecione pelo menos 5 imagens.');
-    } else {
-      setErrorMessage('');
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    if (files.length) {
+      const newPreviews = [];
+      for (let index = 0; index < files.length; index++) {
+        const imagem = files[index];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreviews((prevPreviews) => [...prevPreviews, reader.result]);
+        };
+        reader.readAsDataURL(imagem);
+      }
     }
   };
 
-  // Evento ao selecionar as imagens
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const [exibirData, setExibirData] = useState(false)
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const apresentarDataVencimento = (event) => {
+    setExibirData(event.target.checked);
+    if (event.target.checked == false) {
+      setDataIpva(null)
     }
   };
 
@@ -122,6 +125,9 @@ export default function AdicionarProduto() {
       case "cor":
         setCor(valor);
         break;
+      case "condicao":
+        setCondicao(valor);
+        break;
       default:
         console.warn("Label não reconhecido:", label);
         break;
@@ -129,195 +135,234 @@ export default function AdicionarProduto() {
   };
 
   return (
-    <div>
+    <div className={styles.mainAdicionarVeiculo}>
       <form onSubmit={handleSubmit}>
-        <Dropdown label="marca" onValorSelecionado={handleValorSelecionado} />
-        <Dropdown label="categoria" onValorSelecionado={handleValorSelecionado} />
-        <DropdownEspecial
-          label="modelo"
-          valorMarca={valorMarca}
-          valorCategoria={valorCategoria}
-          onValorSelecionado={handleValorSelecionado}
-        />
-        <Dropdown label="aro" onValorSelecionado={handleValorSelecionado} />
-        <Dropdown label="combustivel" onValorSelecionado={handleValorSelecionado} />
-        <Dropdown label="cor" onValorSelecionado={handleValorSelecionado} />
+        <div className={styles.fundoCampoAdicionarVeiculo}>
+          <div className={styles.campoDuasColunas}>
+            <Dropdown
+              label="marca"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto} />
 
-        <div className="campodePrenchimento">
-          <label>
-            <p>Condição do veículo</p>
-            <select
-              value={valorCondicao || ""}
-              onChange={(e) => setCondicao(e.target.value)}
-            >
-              <option disabled value="">
-                Escolha
-              </option>
-              <option value="novo">Novo</option>
-              <option value="semi-novo">Semi novo</option>
-              <option value="usado">Usado</option>
-            </select>
-          </label>
-        </div>
+            <Dropdown
+              label="categoria"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto} />
 
-        <div>
-          <label>
-            Ano
-            <input
-              type="number"
-              name="ano"
-              onBlur={(e) => validarAno(e.target)}
-              onChange={(e) => setAno(e.target.value)}
+            <DropdownEspecial
+              label="modelo"
+              valorMarca={valorMarca}
+              valorCategoria={valorCategoria}
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto}
             />
-          </label>
-        </div>
 
-        <div>
-          <label>
-            Data compra
-            <input
-              type="date"
-              name="dataCompra"
-              onChange={(e) => setDataCompra(e.target.value)}
-            />
-          </label>
-        </div>
+            <Dropdown
+              label="aro"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto} />
 
-        <div>
-          <label>
-            IPVA
-            <input
-              type="checkbox"
-              name="ipva"
-              checked={checkboxValues.ipva}
-              onChange={handleCheckboxChange}
-            />
-          </label>
-        </div>
+            <Dropdown
+              label="combustivel"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto} />
 
-        <div>
-          <label>
-            Data IPVA
-            <input
-              type="date"
-              name="dataIpva"
-              onBlur={(e) => validarAnoCalendario(e.target)}
-              onChange={(e) => setDataIpva(e.target.value)}
-            />
-          </label>
-        </div>
+            <Dropdown
+              label="cor"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto} />
 
-        <div>
-          <label>
-            Blindagem
-            <input
-              type="checkbox"
-              name="blindagem"
-              checked={checkboxValues.blindagem}
-              onChange={handleCheckboxChange}
+            <DropdownSimulado
+              label="condicao"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto}
             />
-          </label>
-        </div>
 
-        <div>
-          <label>
-            Quilometragem
-            <input
-              type="text"
-              name="quilometragem"
-              onBlur={(e) => formatarQuilometragem(e.target)}
-              onChange={(e) => setQuilometragem(e.target.value)}
-            />
-          </label>
-        </div>
+            <div className={styles.filhoCampoDuasColunas}>
+              <div className={styles.campodePrenchimento}>
+                <label className={styles.label}>
+                  Ano
+                </label>
+                <input
+                  type="number"
+                  name="ano"
+                  onBlur={(e) => validarAno(e.target)}
+                  onChange={(e) => setAno(e.target.value)}
+                  placeholder="Ex: 2007"
+                />
 
-        <div>
-          <label>
-            Nome de exibição
-            <input
-              type="text"
-              name="nome"
-              onChange={(e) => setNome(e.target.value)}
-            />
-          </label>
-        </div>
+              </div>
+            </div>
 
-        <div>
-          <label>
-            Imagens do produto
-            <input
-              id="file-upload"
-              type="file"
-              name="imagens"
-              onChange={(e) => { setImagens(Array.from(e.target.files)), handleFileChange(e) }}
-              multiple
-            />
-          </label>
-          <div className="image-preview-area">
-            {imagePreview && (
-              <img
-                src={imagePreview}
-                alt="Pré-visualização"
-                style={{ maxWidth: '300px', display: 'block', marginTop: '10px' }}
-              />
-            )}
+            <div className={styles.filhoCampoDuasColunas}>
+              <div className={styles.campodePrenchimento}>
+                <label className={styles.label}>
+                  Data compra
+                </label>
+                <input id={styles.campoInputDataCompra}
+                  type="date"
+                  name="dataCompra"
+                  onBlur={(e) => validarAnoCalendario(e.target)}
+                  onChange={(e) => setDataCompra(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className={styles.filhoCampoDuasColunas}>
+              <div className={styles.campodePrenchimento}>
+                <label className={styles.label}>
+                  Quilometragem
+                </label>
+                <input
+                  type="text"
+                  name="quilometragem"
+                  onBlur={(e) => formatarQuilometragem(e.target)}
+                  onChange={(e) => setQuilometragem(e.target.value)}
+                  placeholder="Ex: 1.200,00 Km"
+                />
+
+              </div>
+            </div>
+
+            <div className={styles.filhoCampoDuasColunas}>
+              <div className={styles.campodePrenchimento}>
+                <label className={styles.label}>
+                  IPVA
+                </label>
+                <input
+                  type="checkbox"
+                  name="ipva"
+                  checked={checkboxValues.ipva}
+                  onChange={(e) => { apresentarDataVencimento(e), handleCheckboxChange(e) }}
+                />
+              </div>
+            </div>
+
+            <div className={styles.filhoCampoDuasColunas}>
+              <div className={styles.campodePrenchimento}>
+                <label className={styles.label}>
+                  Blindagem
+                </label>
+                <input
+                  type="checkbox"
+                  name="blindagem"
+                  checked={checkboxValues.blindagem}
+                  onChange={handleCheckboxChange}
+                />
+              </div>
+            </div>
           </div>
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
-        </div>
-
-        <div>
-          <label>
-            Detalhes
-            <textarea
-              name="detalhes"
-              cols="30"
-              rows="10"
-              onChange={(e) => setDetalhes(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div>
-          <label>
-            Valor do produto
-            <input
-              type="text"
-              name="valor"
-              onBlur={(e) => formatarValorMonetario(e.target)}
-              onChange={(e) => setValor(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div>
-          <label>
-            Contatos para negociações
+          <div>
+            {exibirData && (
+              <div>
+                <label className={styles.label}>
+                  Data IPVA
+                </label>
+                <input
+                  type="date"
+                  name="dataIpva"
+                  onBlur={(e) => validarAnoCalendario(e.target)}
+                  onChange={(e) => setDataIpva(e.target.value)}
+                  onLoad={(e) => setComponenteDataIpva(e.target)}
+                />
+              </div>
+            )}
             <div>
-              <label>
-                Número
+              <label className={styles.label}>
+                Nome de exibição
+              </label>
+              <input
+                type="text"
+                name="nome"
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>
+                Imagens do produto
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                name="imagens"
+                onChange={(e) => { setImagens(Array.from(e.target.files)), handleFileChange(e) }}
+                multiple
+              />
+              <div className="image-preview-area">
+                {imagePreviews.map((preview, index) => (
+                  <img
+                    key={index}
+                    src={preview}
+                    alt={`Pré-visualização ${index + 1}`}
+                    className={styles.imagemVeiculo}
+                  />
+                ))}
+              </div>
+              {errorMessage && <div className="error-message">{errorMessage}</div>}
+            </div>
+
+            <div>
+              <label className={styles.label}>
+                Detalhes
+              </label>
+              <textarea
+                name="detalhes"
+                cols="30"
+                rows="10"
+                onChange={(e) => setDetalhes(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>
+                Valor do produto
+              </label>
+              <input
+                type="text"
+                name="valor"
+                onBlur={(e) => formatarValorMonetario(e.target)}
+                onChange={(e) => setValor(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className={styles.label}>
+                Contatos para negociações
+              </label>
+              <div>
+                <label className={styles.label}>
+                  Número
+                </label>
                 <input
                   type="checkbox"
                   name="contatoNumero"
                   checked={checkboxValues.contatoNumero}
                   onChange={handleCheckboxChange}
                 />
-              </label>
 
-              <label>
-                E-mail
+                <label className={styles.label}>
+                  E-mail
+                </label>
                 <input
                   type="checkbox"
                   name="contatoEmail"
                   checked={checkboxValues.contatoEmail}
                   onChange={handleCheckboxChange}
                 />
-              </label>
+              </div>
             </div>
-          </label>
+          </div>
         </div>
-
         <button type="submit">Enviar</button>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 }

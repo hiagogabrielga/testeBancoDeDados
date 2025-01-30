@@ -1,27 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import styles from "./page.module.css";
 
-const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto, setDropdownAberto }) => {
-    const [valores, setValores] = useState([]);
-    const [selecionado, setSelecionado] = useState("Escolha"); // Estado para exibir a opção escolhida
+const DropdownSimulado = ({ label, onValorSelecionado, dropdownAberto, setDropdownAberto }) => {
+    const [selecionado, setSelecionado] = useState("Escolha");
+    const valores = ["Novo", "Semi novo", "Usado"]; // Valores simulados para a condição do veículo
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const resultado = await axios.get(`http://localhost:8080/api/${label}`);
-                setValores(resultado.data);
-            } catch (error) {
-                console.error("Erro ao buscar dados:", error);
-            }
-        };
-        fetchData();
-    }, [label]);
-
-    const handleSelecionar = (valor, nome) => {
-        setSelecionado(nome); // Atualiza o nome visível
-        setDropdownAberto(""); // Fecha o dropdown após seleção
-        onValorSelecionado(label, valor); // Dispara a função passada via props
+    const handleSelecionar = (valor) => {
+        setSelecionado(valor); // Atualiza a opção selecionada
+        onValorSelecionado(label, valor); // Dispara a função com o valor
+        setDropdownAberto(""); // Fecha o dropdown após a seleção
     };
 
     const handleAbrirDropdown = () => {
@@ -34,10 +21,7 @@ const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto
                 <div className={styles.selectContainer}>
                     <p className={styles.label}>{label[0].toUpperCase() + label.slice(1)}</p>
 
-                    <div
-                        className={styles.customSelect}
-                        onClick={handleAbrirDropdown}
-                    >
+                    <div className={styles.customSelect} onClick={handleAbrirDropdown}>
                         <span>{selecionado}</span>
                         <span className={styles.arrow}>
                             {dropdownAberto === label ? (
@@ -54,13 +38,13 @@ const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto
 
                     {dropdownAberto === label && (
                         <ul className={styles.dropdownLista}>
-                            {valores.map((item) => (
+                            {valores.map((valor, index) => (
                                 <li
-                                    key={item[`id_${label}`]}
+                                    key={index}
                                     className={styles.dropdownItem}
-                                    onClick={() => handleSelecionar(item[`id_${label}`], item[`nome_${label}`])}
+                                    onClick={() => handleSelecionar(valor)}
                                 >
-                                    {item[`nome_${label}`]}
+                                    {valor}
                                 </li>
                             ))}
                         </ul>
@@ -71,4 +55,4 @@ const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto
     );
 };
 
-export default Dropdown;
+export default DropdownSimulado;
