@@ -1,13 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const nomeTabela = 'cor'
+const nomeTabela = 'anuncioCarro'
 
 export default function teste() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/${nomeTabela}`)
+    axios.get(`http://localhost:8080/api/mostrar/${nomeTabela}`)
       .then(response => setData(response.data));
   }, []);
   return (
