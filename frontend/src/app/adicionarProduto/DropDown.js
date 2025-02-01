@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./page.module.css";
 
-const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto, setDropdownAberto }) => {
+const Dropdown = ({ label, onValorSelecionado, dropdownAberto, setDropdownAberto }) => {
     const [valores, setValores] = useState([]);
     const [selecionado, setSelecionado] = useState("Escolha"); // Estado para exibir a opção escolhida
+    const [selecionadoId, setSelecionadoId] = useState(null); // Estado para armazenar o ID do item selecionado
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,13 +20,14 @@ const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto
     }, [label]);
 
     const handleSelecionar = (valor, nome) => {
-        setSelecionado(nome); // Atualiza o nome visível
-        setDropdownAberto(""); // Fecha o dropdown após seleção
-        onValorSelecionado(label, valor); // Dispara a função passada via props
+        setSelecionado(nome);
+        setSelecionadoId(valor); // Atualiza o ID do item selecionado
+        setDropdownAberto(""); // Fecha o dropdown após a seleção
+        onValorSelecionado(label, valor);
     };
 
     const handleAbrirDropdown = () => {
-        setDropdownAberto(dropdownAberto === label ? "" : label); // Alterna entre abrir e fechar
+        setDropdownAberto(dropdownAberto === label ? "" : label);
     };
 
     return (
@@ -57,7 +59,7 @@ const Dropdown = ({ label, onValorSelecionado, aberto, setAberto, dropdownAberto
                             {valores.map((item) => (
                                 <li
                                     key={item[`id_${label}`]}
-                                    className={styles.dropdownItem}
+                                    className={`${styles.dropdownItem} ${selecionadoId === item[`id_${label}`] ? styles.itemSelecionado : ""}`}
                                     onClick={() => handleSelecionar(item[`id_${label}`], item[`nome_${label}`])}
                                 >
                                     {item[`nome_${label}`]}

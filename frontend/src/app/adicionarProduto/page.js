@@ -238,24 +238,28 @@ export default function AdicionarProduto() {
                 </label>
                 <input
                   type="checkbox"
+                  id="ipva"
                   name="ipva"
                   checked={checkboxValues.ipva}
                   onChange={(e) => { apresentarDataVencimento(e), handleCheckboxChange(e) }}
+                  className={styles.checkbox}
                 />
+                <label htmlFor="ipva" className={styles.labelChekBox} ></label>
               </div>
             </div>
 
             <div className={styles.filhoCampoDuasColunas}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Blindagem
-                </label>
+                <label className={styles.label}>Blindagem</label>
                 <input
                   type="checkbox"
+                  id="blindagem"
                   name="blindagem"
                   checked={checkboxValues.blindagem}
                   onChange={handleCheckboxChange}
+                  className={styles.checkbox}
                 />
+                <label htmlFor="blindagem" className={styles.labelChekBox}></label>
               </div>
             </div>
           </div>

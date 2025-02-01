@@ -19,12 +19,6 @@
     box-Shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.selectContainer {
-    position: relative;
-    width: 100%;
-    max-width: 300px;
-}
-
 .label {
     font-size: 16px;
     font-weight: 500;
@@ -34,29 +28,16 @@
     font-weight: bolder;
 }
 
-.customSelect {
-    background-color: white;
-    border: 2px solid #C63434;
-    border-radius: 8px;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #505050;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .arrow {
     font-size: 14px;
-    color: #C63434;
+    color: var(--corFontes);
 }
 
 .dropdownLista {
     position: absolute;
     width: 100%;
-    background-color: white;
-    border: 2px solid #C63434;
+    background-color: var(--corPrecimento);
+    border: 1px solid var(--corFontes);
     border-radius: 8px;
     margin-top: 5px;
     list-style: none;
@@ -64,17 +45,6 @@
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
-}
-
-.dropdownItem {
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.dropdownItem:hover {
-    background-color: #C63434;
-    color: white;
 }
 
 .campodePrenchimentoDropDown{
@@ -91,8 +61,8 @@
 }
 
 .customSelect {
-    background-color: white;
-    border: 2px solid #C63434;
+    background-color: var(--corPrecimento);
+    border: 1px solid var(--corFontes);
     border-radius: 8px;
     padding: 10px;
     cursor: pointer;
@@ -110,25 +80,6 @@
     color: #aaa;
 }
 
-.arrow {
-    font-size: 14px;
-    color: #C63434;
-}
-
-.dropdownLista {
-    position: absolute;
-    width: 100%;
-    background-color: white;
-    border: 2px solid #C63434;
-    border-radius: 8px;
-    margin-top: 5px;
-    list-style: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-}
-
 .dropdownItem {
     padding: 10px;
     cursor: pointer;
@@ -136,8 +87,7 @@
 }
 
 .dropdownItem:hover {
-    background-color: #C63434;
-    color: white;
+    background-color: #50505085;
 }
 
 .mensagemErro {
@@ -172,15 +122,70 @@
     position: relative;
     width: 100%;
     max-width: 300px;
-    background-color: white;
-    border: 2px solid #C63434;
+    background-color: var(--corPrecimento);
+    border: 1px solid var(--corFontes);
     border-radius: 8px;
     padding: 10px;
     cursor: pointer;
     font-size: 16px;
-    color: #505050;
+    color: var(--corFontes);
     display: flex;
     align-items: center;
     box-sizing: border-box;
 }
 
+.itemSelecionado {
+    background-color: #c6343485; /* Azul claro, altere conforme desejado */
+    font-weight: bold;
+}
+
+.itemSelecionado:hover{
+    background-color: #C6343499;
+}
+
+.checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox+label {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 28px;
+}
+
+.checkbox+label:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    border-radius: 44px;
+    transition: 0.4s;
+}
+
+.checkbox+label:after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 2px;
+    top: 2px;
+    bottom: 4px;
+    background-color: var(--corFontes);
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.checkbox:checked+label:before {
+    background-color: var(--corIconeImagem);
+}
+
+.checkbox:checked+label:after {
+    transform: translateX(300%);
+    background-color: white;
+}
