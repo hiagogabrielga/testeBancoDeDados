@@ -14,10 +14,11 @@
 .imagemVeiculo {
     max-width: 150px;
     display: "inline-block";
-    margin: 10px;
+    margin: 2.5px;
     border-Radius: 10px;
     box-Shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 .label {
     font-size: 16px;
@@ -31,6 +32,7 @@
 .arrow {
     font-size: 14px;
     color: var(--corFontes);
+    font-weight: bold;
 }
 
 .dropdownLista {
@@ -107,7 +109,7 @@
 
 .campoDuasColunas{
     display: flex;
-    padding: 5% 0% 10%;
+    padding-top: 5%;
     flex-wrap: wrap;
     justify-content: space-around;
 }
@@ -121,7 +123,6 @@
 .campodePrenchimento input{
     position: relative;
     width: 100%;
-    max-width: 300px;
     background-color: var(--corPrecimento);
     border: 1px solid var(--corFontes);
     border-radius: 8px;
@@ -188,4 +189,115 @@
 .checkbox:checked+label:after {
     transform: translateX(300%);
     background-color: white;
+}
+
+
+.campoUmaColuna{
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+}
+
+.filhoCampoUmaColuna, .campoContato, .campoPreenchimentoimagens, .campoDetalhes{
+    box-sizing: border-box;
+    padding: 1rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: calc((100% / 1) - 4rem);
+}
+
+.inputFilesImagens{
+    display: none;
+}
+
+
+#campoImagens{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    border: 1px solid var(--corFontes);
+    border-radius: 8px;
+    background: var(--corPrecimento);
+    padding: 2%;
+    box-sizing: border-box;
+}
+
+#iconeAdicionarImagem{
+    display: flex;
+    margin: auto 0;
+    height: 100px;
+    color: var(--corIconeImagem);
+    background-color: #ff110057;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px var(--corIconeImagem) dotted;
+    width: 70px;
+    cursor: pointer;
+}
+
+.campoDetalhes textarea{
+    border: 1px solid var(--corFontes);
+    border-radius: 8px;
+    background: var(--corPrecimento);
+    padding: 2%;
+    resize: vertical;
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+}
+
+.campoOpcoesContato{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid var(--corFontes);
+    border-radius: 8px;
+    background: var(--corPrecimento);
+    padding: 2%;
+    box-sizing: border-box;
+    height: 90px;
+    justify-content: space-between;
+}
+
+.opcoesContato{
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.labelOpcoescontato{
+    display: flex;
+    align-items: center;
+}
+
+.labelOpcoescontato label{
+    margin: auto 5px;
+}
+
+#btnAdicionarProduto{
+    background-color: var(--corDetalhes);
+    color: white;
+    width: 250px;
+    height: 50px;
+    border: none;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    right: 0;
+    transition: all 0.2s;
+}
+
+#btnAdicionarProduto:hover{
+    background-color: #fc1b1b
+}
+
+.campoBotoes{
+    width: 100%;
+    display: flex;
+    justify-content: right;
 }

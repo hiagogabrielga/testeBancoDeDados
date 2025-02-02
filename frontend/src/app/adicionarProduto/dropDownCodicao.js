@@ -41,7 +41,7 @@ const DropdownSimulado = ({ label, onValorSelecionado, dropdownAberto, setDropdo
                             {valores.map((valor, index) => (
                                 <li
                                     key={index}
-                                    className={styles.dropdownItem}
+                                    className={`${styles.dropdownItem} ${selecionado === valor ? styles.itemSelecionado : ""}`}
                                     onClick={() => handleSelecionar(valor)}
                                 >
                                     {valor}
