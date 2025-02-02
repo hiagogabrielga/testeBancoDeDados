@@ -6,20 +6,6 @@
     box-sizing: border-box;
 }
 
-.mainAdicionarVeiculo {
-    width: calc(100% - 40%);
-    margin: 0 auto 25px;
-}
-
-.imagemVeiculo {
-    max-width: 150px;
-    display: "inline-block";
-    margin: 2.5px;
-    border-Radius: 10px;
-    box-Shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
 .label {
     font-size: 16px;
     font-weight: 500;
@@ -270,6 +256,7 @@
 .labelOpcoescontato{
     display: flex;
     align-items: center;
+    color: var(--corFontes);
 }
 
 .labelOpcoescontato label{
@@ -300,4 +287,45 @@
     width: 100%;
     display: flex;
     justify-content: right;
+}
+
+.mainAdicionarVeiculo {
+    width: calc(100% - 40%);
+    margin: 0 auto 25px;
+}
+
+.imagemVeiculo {
+    max-width: 140px;
+    display: "inline-block";
+    border-Radius: 5px;
+    bottom: 0;
+    box-Shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cardImagem{
+    background-color: var(--corDeFundo);
+    border-Radius: 10px;
+    margin: 2.5px;
+    padding: 1% 2%; 
+    box-sizing: border-box;
+}
+
+.botaoTirarImagem{
+    border: var(--corDetalhes) solid 1px;
+    background-color: var(--corPrecimento);
+    padding: 2%;
+    box-sizing: border-box;
+    color: var(--corFontes);
+    margin: 1% 0 2%;
+    border-Radius: 5px;
+    transition: all 0.2s;
+    display: flex;
+}
+
+.botaoTirarImagem:hover{
+    background-color: var(--corDetalhes);
+    color: var(--corDeFundo);
+}
+.botaoTirarImagem>svg{
+    margin: auto;
 }

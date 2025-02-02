@@ -11,6 +11,7 @@ const Dropdown = ({ label, onValorSelecionado, dropdownAberto, setDropdownAberto
         const fetchData = async () => {
             try {
                 const resultado = await axios.get(`http://localhost:8080/api/${label}`);
+                console.log(resultado.data)
                 setValores(resultado.data);
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);

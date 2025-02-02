@@ -55,15 +55,31 @@ const DropdownEspecial = ({
         fetchData();
     }, [valorMarca, valorCategoria]);
 
+    useEffect(() => {
+        // Resetando os valores quando 'valorMarca' ou 'valorCategoria' mudam
+        setSelecionado("Escolha");
+        setValores([]);
+        setMensagem("");
+    }, [valorMarca, valorCategoria]);
+
     const handleSelecionar = (valor, nome) => {
         setSelecionado(nome);
         setDropdownAberto(""); // Fecha o dropdown ao selecionar um item
-        onValorSelecionado(label, valor);
+        onValorSelecionado(label, valor); // Envia o valor selecionado para o componente pai
     };
 
     const handleAbrirDropdown = () => {
         setDropdownAberto(dropdownAberto === label ? "" : label); // Alterna entre abrir e fechar
     };
+
+    // Função para desabilitar o dropdown se não houver valores
+    const isDropdownDisabled = valores.length === 0;
+
+    useEffect(() => {
+        if (isDropdownDisabled) {
+            onValorSelecionado(label, "desabilitado"); // Envia "desabilitado" para o pai quando não houver opções
+        }
+    }, [isDropdownDisabled, label, onValorSelecionado]);
 
     return (
         <div className={styles.filhoCampoDuasColunas}>
@@ -72,8 +88,8 @@ const DropdownEspecial = ({
                     <p className={styles.label}>{label[0].toUpperCase() + label.slice(1)}</p>
 
                     <div
-                        className={`${styles.customSelect} ${valores.length === 0 ? styles.disabled : ""}`}
-                        onClick={() => valores.length > 0 && handleAbrirDropdown()}
+                        className={`${styles.customSelect} ${isDropdownDisabled ? styles.disabled : ""}`}
+                        onClick={() => !isDropdownDisabled && handleAbrirDropdown()} // Impede a abertura do dropdown se estiver desabilitado
                     >
                         <span>{selecionado}</span>
                         <span className={styles.arrow}>

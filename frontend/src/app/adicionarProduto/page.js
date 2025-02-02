@@ -20,6 +20,7 @@ export default function AdicionarProduto() {
   const [valorAno, setAno] = useState();
   const [valorDataCompra, setDataCompra] = useState();
   const [valorNome, setNome] = useState();
+  const [valorCambio, setCambio] = useState();
   const [checkboxValues, setCheckboxValues] = useState({
     ipva: false,
     blindagem: false,
@@ -28,38 +29,64 @@ export default function AdicionarProduto() {
   });
   const [valorDataIpva, setDataIpva] = useState();
   const [valorValor, setValor] = useState();
-  const [valorImagens, setImagens] = useState([]); // Alterado para array
   const [valorDetalhes, setDetalhes] = useState();
   const [valorQuilometragem, setQuilometragem] = useState();
-  const [errorMessage, setErrorMessage] = useState(''); // Adicionado para mensagem de erro
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const [valorImagens, setImagens] = useState([]);
+  const [imagensTemporarias, setImagensTemporarias] = useState([]); // Array secundário para armazenar imagens temporariamente
   const [imagePreviews, setImagePreviews] = useState([]);
 
-  const handleFileChange = (event) => {
-    const files = event.target.files;
+  const controleImagens = (event) => {
+    const files = Array.from(event.target.files);
+    setImagensTemporarias(files); // Armazena as imagens no array temporário
+    handleFileChange(files);
+  };
+
+  const handleFileChange = (files) => {
     if (files.length) {
       const newPreviews = [];
-      for (let index = 0; index < files.length; index++) {
-        const imagem = files[index];
+      files.forEach((file) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setImagePreviews((prevPreviews) => [...prevPreviews, reader.result]);
+          newPreviews.push(reader.result);
+          if (newPreviews.length === files.length) {
+            setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+          }
         };
-        reader.readAsDataURL(imagem);
-      }
+        reader.readAsDataURL(file);
+      });
     }
   };
 
-  const [exibirData, setExibirData] = useState(false)
+  const excluirImagem = (index) => {
+    setImagensTemporarias((prevImagens) => {
+      const newImages = [...prevImagens];
+      newImages.splice(index, 1);
+      return newImages;
+    });
+
+    setImagePreviews((prevPreviews) => {
+      const newPreviews = [...prevPreviews];
+      newPreviews.splice(index, 1);
+      return newPreviews;
+    });
+  };
+
+  const [exibirData, setExibirData] = useState(false);
 
   const apresentarDataVencimento = (event) => {
     setExibirData(event.target.checked);
-    if (event.target.checked == false) {
-      setDataIpva(null)
+    if (event.target.checked === false) {
+      setDataIpva(null);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const imagensProcessadas = await controleDadosImagem(imagensTemporarias);
+
     const selectedValues = {
       marca: valorMarca,
       aro: valorAro,
@@ -70,7 +97,7 @@ export default function AdicionarProduto() {
       cor: valorCor,
       ano: valorAno,
       valor: valorValor,
-      imagens: valorImagens ? controleDadosImagem(valorImagens) : [],
+      imagens: imagensProcessadas,
       blindagem: valorBlindagem,
       dataCompra: valorDataCompra,
       nome: valorNome,
@@ -80,14 +107,15 @@ export default function AdicionarProduto() {
       contatoEmail: valorContatoEmail,
       contatoNumero: valorContatoNumero,
       quilometragem: valorQuilometragem,
+      cambio: valorCambio,
     };
 
     try {
-      console.log("Dados a serem enviados:", selectedValues);
-      // Descomente para enviar para a API:
-      // await axios.post("http://localhost:8080/api/enviar-dados", selectedValues);
+      await axios.post(`http://localhost:8080/api/adicionar/adicionarCarro?nomeAnuncio=${selectedValues.nome}&anoCarro=${selectedValues.ano}&condicaoCarro=${selectedValues.condicao}&valorCarro=${selectedValues.valor}&ipvaPago=${selectedValues.ipva}&dataIpva=${selectedValues.dataIpva}&dataCompra=${selectedValues.dataCompra}&detalhesVeiculo=${selectedValues.detalhes}&blindagem=${selectedValues.blindagem}&idCor=${selectedValues.cor}&idAro=${selectedValues.aro}&idCategoria=${selectedValues.categoria}&idMarca=${selectedValues.marca}&idModelo=${selectedValues.modelo}&idCombustivel=${selectedValues.combustivel}&idCambio=${selectedValues.cambio}&idConcessionaria=1&nomeImagens=${selectedValues.imagens}`)
+
+      alert("Dados enviado com sucesso!")
     } catch (error) {
-      console.error("Erro ao enviar os dados:", error);
+      console.error("erro ao enviar dados" + error)
     }
   };
 
@@ -99,7 +127,6 @@ export default function AdicionarProduto() {
     }));
   };
 
-  // Variáveis para converter checkbox em valores binários
   const valorIpva = checkboxValues.ipva ? '1' : '0';
   const valorBlindagem = checkboxValues.blindagem ? '1' : '0';
   const valorContatoEmail = checkboxValues.contatoEmail ? '1' : '0';
@@ -128,6 +155,9 @@ export default function AdicionarProduto() {
       case "condicao":
         setCondicao(valor);
         break;
+      case "cambio":
+        setCambio(valor);
+        break;
       default:
         console.warn("Label não reconhecido:", label);
         break;
@@ -143,13 +173,15 @@ export default function AdicionarProduto() {
               label="marca"
               onValorSelecionado={handleValorSelecionado}
               dropdownAberto={dropdownAberto}
-              setDropdownAberto={setDropdownAberto} />
+              setDropdownAberto={setDropdownAberto}
+            />
 
             <Dropdown
               label="categoria"
               onValorSelecionado={handleValorSelecionado}
               dropdownAberto={dropdownAberto}
-              setDropdownAberto={setDropdownAberto} />
+              setDropdownAberto={setDropdownAberto}
+            />
 
             <DropdownEspecial
               label="modelo"
@@ -164,19 +196,29 @@ export default function AdicionarProduto() {
               label="aro"
               onValorSelecionado={handleValorSelecionado}
               dropdownAberto={dropdownAberto}
-              setDropdownAberto={setDropdownAberto} />
+              setDropdownAberto={setDropdownAberto}
+            />
 
             <Dropdown
               label="combustivel"
               onValorSelecionado={handleValorSelecionado}
               dropdownAberto={dropdownAberto}
-              setDropdownAberto={setDropdownAberto} />
+              setDropdownAberto={setDropdownAberto}
+            />
 
             <Dropdown
               label="cor"
               onValorSelecionado={handleValorSelecionado}
               dropdownAberto={dropdownAberto}
-              setDropdownAberto={setDropdownAberto} />
+              setDropdownAberto={setDropdownAberto}
+            />
+
+            <Dropdown
+              label="cambio"
+              onValorSelecionado={handleValorSelecionado}
+              dropdownAberto={dropdownAberto}
+              setDropdownAberto={setDropdownAberto}
+            />
 
             <DropdownSimulado
               label="condicao"
@@ -187,9 +229,7 @@ export default function AdicionarProduto() {
 
             <div className={styles.filhoCampoDuasColunas}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Ano
-                </label>
+                <label className={styles.label}>Ano</label>
                 <input
                   type="number"
                   name="ano"
@@ -197,16 +237,14 @@ export default function AdicionarProduto() {
                   onChange={(e) => setAno(e.target.value)}
                   placeholder="Ex: 2007"
                 />
-
               </div>
             </div>
 
             <div className={styles.filhoCampoDuasColunas}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Data compra
-                </label>
-                <input id={styles.campoInputDataCompra}
+                <label className={styles.label}>Data compra</label>
+                <input
+                  id={styles.campoInputDataCompra}
                   type="date"
                   name="dataCompra"
                   onBlur={(e) => validarAnoCalendario(e.target)}
@@ -215,27 +253,22 @@ export default function AdicionarProduto() {
               </div>
             </div>
 
-            <div className={styles.filhoCampoDuasColunas}>
+            <div className={styles.filhoCampoUmaColuna}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Quilometragem
-                </label>
+                <label className={styles.label}>Quilometragem</label>
                 <input
                   type="text"
                   name="quilometragem"
                   onBlur={(e) => formatarQuilometragem(e.target)}
-                  onChange={(e) => setQuilometragem(e.target.value)}
+                  onChange={(e) => { setQuilometragem(e.target.value) }}
                   placeholder="Ex: 1.200,00 Km"
                 />
-
               </div>
             </div>
 
             <div className={styles.filhoCampoDuasColunas}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  IPVA
-                </label>
+                <label className={styles.label}>IPVA</label>
                 <input
                   type="checkbox"
                   id="ipva"
@@ -244,7 +277,7 @@ export default function AdicionarProduto() {
                   onChange={(e) => { apresentarDataVencimento(e), handleCheckboxChange(e) }}
                   className={styles.checkbox}
                 />
-                <label htmlFor="ipva" className={styles.labelChekBox} ></label>
+                <label htmlFor="ipva" className={styles.labelChekBox}></label>
               </div>
             </div>
 
@@ -268,24 +301,19 @@ export default function AdicionarProduto() {
             {exibirData && (
               <div className={styles.filhoCampoUmaColuna}>
                 <div className={styles.campodePrenchimento}>
-                  <label className={styles.label}>
-                    Data IPVA
-                  </label>
+                  <label className={styles.label}>Data IPVA</label>
                   <input
                     type="date"
                     name="dataIpva"
                     onBlur={(e) => validarAnoCalendario(e.target)}
                     onChange={(e) => setDataIpva(e.target.value)}
-                    onLoad={(e) => setComponenteDataIpva(e.target)}
                   />
                 </div>
               </div>
             )}
             <div className={styles.filhoCampoUmaColuna}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Nome de exibição
-                </label>
+                <label className={styles.label}>Nome de exibição</label>
                 <input
                   type="text"
                   name="nome"
@@ -296,18 +324,15 @@ export default function AdicionarProduto() {
             </div>
 
             <div className={styles.campoPreenchimentoimagens}>
-              <label className={styles.label}>
-                Imagens do produto
-              </label>
+              <label className={styles.label}>Imagens do produto</label>
               <input
                 id="file-upload"
                 type="file"
                 name="file-upload"
-                onChange={(e) => { setImagens(Array.from(e.target.files)), handleFileChange(e) }}
+                onChange={(e) => controleImagens(e)}
                 multiple
                 accept="image/*"
                 className={styles.inputFilesImagens}
-
               />
               <div>
                 <div id={styles.campoImagens} className="image-preview-area">
@@ -317,12 +342,23 @@ export default function AdicionarProduto() {
                     </svg>
                   </label>
                   {imagePreviews.map((preview, index) => (
-                    <img
-                      key={index}
-                      src={preview}
-                      alt={`Pré-visualização ${index + 1}`}
-                      className={styles.imagemVeiculo}
-                    />
+                    <div key={`cardImagem${index}`} className={styles.cardImagem}>
+                      <input
+                        type="button"
+                        key={`botaoTirarImagem${index}`}
+                        onClick={() => excluirImagem(index)}
+                        className={styles.botaoTirarImagem}
+                        value="✖"
+                      />
+                      <div key={`campoImagem${index}`}>
+                        <img
+                          key={`imagem${index}`}
+                          src={preview}
+                          alt={`Pré-visualização ${index + 1}`}
+                          className={styles.imagemVeiculo}
+                        />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -331,9 +367,7 @@ export default function AdicionarProduto() {
             </div>
 
             <div className={styles.campoDetalhes}>
-              <label className={styles.label}>
-                Detalhes
-              </label>
+              <label className={styles.label}>Detalhes</label>
               <textarea
                 name="detalhes"
                 cols="30"
@@ -345,9 +379,7 @@ export default function AdicionarProduto() {
 
             <div className={styles.filhoCampoUmaColuna}>
               <div className={styles.campodePrenchimento}>
-                <label className={styles.label}>
-                  Valor do produto
-                </label>
+                <label className={styles.label}>Valor do produto</label>
                 <input
                   type="text"
                   name="valor"
@@ -404,7 +436,7 @@ export default function AdicionarProduto() {
         <div className={styles.campoBotoes}>
           <button id={styles.btnAdicionarProduto} type="submit">Enviar</button>
         </div>
-        
+
       </form >
     </div >
   );
