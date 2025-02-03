@@ -403,6 +403,7 @@ export default function AdicionarProduto() {
                     <label className={styles.label}>
                       Número
                     </label>
+                    <input type="text" />
                   </div>
 
                   <input
@@ -420,6 +421,7 @@ export default function AdicionarProduto() {
                     <label className={styles.label}>
                       E-mail
                     </label>
+                    <input type="text" />
                   </div>
 
                   <input

@@ -45,7 +45,7 @@
 .selectContainer {
     position: relative;
     width: 100%;
-    max-width: 300px;
+
 }
 
 .customSelect {
@@ -306,7 +306,7 @@
     background-color: var(--corDeFundo);
     border-Radius: 10px;
     margin: 2.5px;
-    padding: 1% 2%; 
+    padding: 5px 5px 2px; 
     box-sizing: border-box;
 }
 
@@ -315,8 +315,9 @@
     background-color: var(--corPrecimento);
     padding: 2%;
     box-sizing: border-box;
+    width: 25px;
     color: var(--corFontes);
-    margin: 1% 0 2%;
+    margin: 2%;
     border-Radius: 5px;
     transition: all 0.2s;
     display: flex;
