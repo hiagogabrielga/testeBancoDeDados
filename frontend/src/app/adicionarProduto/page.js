@@ -37,6 +37,9 @@ export default function AdicionarProduto() {
   const [imagensTemporarias, setImagensTemporarias] = useState([]); // Array secundário para armazenar imagens temporariamente
   const [imagePreviews, setImagePreviews] = useState([]);
 
+  const [valorContatoNumeroDeTelefone, setValorContatoNumeroDeTelefone] = useState();
+  const [valorContatoEmailEndereco, setValorContatoEmailEndereco] = useState();
+
   const controleImagens = (event) => {
     const files = Array.from(event.target.files);
     setImagensTemporarias(files); // Armazena as imagens no array temporário
@@ -108,6 +111,8 @@ export default function AdicionarProduto() {
       contatoNumero: valorContatoNumero,
       quilometragem: valorQuilometragem,
       cambio: valorCambio,
+      numeroTelefone: valorContatoNumeroDeTelefone,
+      enderecoEmail: valorContatoEmailEndereco,
     };
 
     try {
@@ -403,7 +408,7 @@ export default function AdicionarProduto() {
                     <label className={styles.label}>
                       Número
                     </label>
-                    <input type="text" />
+                    <input type="text" onChange={(e) => setValorContatoNumeroDeTelefone(e.target.value)} />
                   </div>
 
                   <input
@@ -421,7 +426,7 @@ export default function AdicionarProduto() {
                     <label className={styles.label}>
                       E-mail
                     </label>
-                    <input type="text" />
+                    <input type="text" onChange={(e) => setValorContatoEmailEndereco(e.target.value)} />
                   </div>
 
                   <input
