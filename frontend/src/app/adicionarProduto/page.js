@@ -1,8 +1,8 @@
 'use client';
 import axios from "axios";
 import React, { useState } from "react";
-import Dropdown from "./dropDown.js";
-import DropdownEspecial from "./dropDownEspecial.js";
+import Dropdown from "./DropDown.js";
+import DropdownEspecial from "./DropDownEspecial.js";
 import controleDadosImagem from "./controleDeDadosImagem.js";
 import DropdownSimulado from "./dropDownCodicao.js";
 import styles from "./page.module.css"
